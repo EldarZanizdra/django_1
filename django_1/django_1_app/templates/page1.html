@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Name:</label><input id='name' name='name' type="text"><br>
+        <label for="surname">Surname:</label><input id='surname' name="surname" type="text"><br>
+        <label for="age">Age:</label><input id='age' name='age' type="number">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
