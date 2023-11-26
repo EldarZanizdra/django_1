@@ -1,20 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
-
-class Country(models.Model):
-    name = models.CharField(max_length=100)
-
-
-class Products(models.Model):
-    name = models.CharField(max_length=50)
-    price = models.FloatField()
-    image = models.ImageField(upload_to='static/images')
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-
 
 class Users(models.Model):
     first_name = models.CharField(max_length=50)
@@ -24,40 +9,27 @@ class Users(models.Model):
     age = models.IntegerField()
 
 
-class Artist(models.Model):
+class Admin(models.Model):
     name = models.CharField(max_length=30)
-    year = models.DateTimeField()
+    email = models.EmailField(max_length=50)
+    password = models.CharField(max_length=30)
+    role = models.CharField(default='admin', max_length=5)
 
 
-class Albums(models.Model):
-    title = models.CharField(max_length=100)
-    year = models.DateTimeField()
-    poster = models.ImageField(upload_to='static/images')
-    singer = models.ForeignKey(Artist, on_delete=models.CASCADE)
+class Abstract(models.Model):
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    class Meta():
+        abstract = True
 
 
-class Instruments(models.Model):
-    name = models.CharField(max_length=60)
+class Project(Abstract):
+    pass
 
 
-class Musician(models.Model):
-    first_name = models.CharField(max_length=50)
-    second_name = models.CharField(max_length=100)
-    sex = models.CharField(max_length=6)
-    date_of_birth = models.DateTimeField()
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    instrument = models.ForeignKey(Instruments, on_delete=models.CASCADE)
-
-
-class Directors(models.Model):
-    first_name = models.CharField(max_length=60)
-    second_name = models.CharField(max_length=60)
-    age = models.IntegerField()
-
-
-class Films(models.Model):
-    title = models.CharField(max_length=100)
-    year = models.DateField()
-    director = models.ForeignKey(Directors, on_delete=models.CASCADE)
-    genre = models.CharField(max_length=50)
-    # poster = models.ImageField()
+class Task(Abstract):
+    status = models.BooleanField()
+    deadline = models.DateTimeField()
+    priority = models.IntegerField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
