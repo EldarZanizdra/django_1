@@ -33,3 +33,33 @@ class Task(Abstract):
     deadline = models.DateTimeField()
     priority = models.IntegerField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+class Group(models.Model):
+    class_number = models.IntegerField()
+
+
+class Student(models.Model):
+    first_name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    email = models.EmailField()
+    group = models.ForeignKey(Group, on_delete=models.PROTECT)
+    student_card_number = models.IntegerField()
+
+
+class Card(models.Model):
+    date_of_issue = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField()
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+
+class Literature(models.Model):
+    title = models.CharField(max_length=100)
+    genre = models.CharField(max_length=50)
+    date_of_publication = models.DateTimeField()
+
+
+class Borrowing_a_book(models.Model):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    title_of_the_book = models.ForeignKey(Literature, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
