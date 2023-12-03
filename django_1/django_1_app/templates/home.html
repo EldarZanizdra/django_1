@@ -9,5 +9,15 @@
     {% for i in projects %}
         <a href="/project_page/{{ i.id }}">{{ i.name }}</a>
     {% endfor %}
+
+    {% if page.obj.has_previous %}
+        <a href="?page=1">first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+    {% endif %}
+        <a href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+    {% if page.obj.has_text %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        <a href="?page={{ page_obj.paginator_num_pages }}">{{ page_obj.paginator_num_pages }}</a>
+    {% endif %}
 </body>
 </html>

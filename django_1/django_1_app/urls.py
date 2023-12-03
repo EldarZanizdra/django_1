@@ -10,6 +10,9 @@ urlpatterns = [
     # path('book', views.books, name='books'),
     path('registration', views.RegistrationView.as_view(), name='register'),
     path('login', views.LoginPage.as_view(), name='login'),
+    path('logout', views.LogoutView.as_view(), name='logout'),
     path('project_create', views.project_create, name='project_create'),
     path('project_page/<int:id>', views.ProjectView.as_view(), name='project_page'),
+    path('profile', views.ProfileView.as_view(), name='profile'),
+    path('test', views.TestPage.as_view(), name='test')
    ]

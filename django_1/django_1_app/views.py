@@ -2,13 +2,21 @@ from django.shortcuts import render, redirect
 from .models import Project, Task, Users
 from django.urls import reverse_lazy
 from .forms import ProjectForm, TaskForm
-from .forms import  RegistrationForm, LoginForm
+# from .forms import  RegistrationForm, LoginForm
 from .forms import RegistrationForm, LoginForm
-from django.contrib.auth import authenticate, login
+# from django.contrib.auth import authenticate, login
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+
+
+class TestPage(TemplateView):
+    template_name = 'test.html'
+
 
 class ProjectView(CreateView):
     form_class = TaskForm
@@ -27,8 +35,7 @@ class ProjectView(CreateView):
         return f"/project_page/{self.kwargs["id"]}"
 
 
-
-#def project(request, **kwargs):
+# def project(request, **kwargs):
 #    project = Project.objects.get(id=kwargs['id'])
 #    if request.method == 'POST':
 #        form = TaskForm(request.POST)
@@ -85,8 +92,18 @@ class RegistrationView(CreateView):
         self.object.username
         response = HttpResponse()
         response.set_cookie('name', 'Bob')
-        self.request.COOKIES['name']
+        self.request.COOKIES['username']
         return '/'
+
+
+class ProfileView(TemplateView):
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_profile = self.request.user
+        context['user_profile'] = user_profile
+        return context
 
 
 # def registration(request):
@@ -111,8 +128,9 @@ class LoginPage(LoginView):
     redirect_authenticated_user = True
 
 
-class LogoutView(LoginView):
+class LogoutPage(LogoutView):
     pass
+
 
 # def login_page(request):
 #    if request.method == 'POST':
@@ -133,6 +151,7 @@ class LogoutView(LoginView):
 
 class HomeView(ListView):
     model = Project
+    paginate_by = 2
     template_name = 'home.html'
     context_object_name = 'projects'
 
