@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/static/js/create_project.js"></script>
 </head>
 <body>
     {{ project.name }}
-    <form method="post">
-        {% csrf_token %}
+    <div id="tasks">
         {% for i in tasks %}
-            {{ i.name }}-{{ i.priority }}-{{ i.status }}-{{ i.deadline }}
+            <p>{{ i.name }} {{ i.priority }} {{ i.status }} {{ i.deadline }}</p>
         {% endfor %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit" value="Create Task">
-    </form>
+    </div>
+            {% csrf_token %}
+            {{ form }}
+        <input id='btt' type="submit" value="Create Task" data-url="/project_page/{{ project.id }}/">
 </body>
 </html>

@@ -6,11 +6,12 @@ function test(){
             'dataType': 'json',
             'data': {
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                'text': $('#text').val()
+            },
+            'success': function(data){
+                document.getElementById('resp').innerHTML = data['resp']
             }
         })
     })
 }
 
-$(document).ready(function(){
-    test();
-})

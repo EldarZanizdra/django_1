@@ -7,6 +7,9 @@
     <script src="/static/js/test.js"></script>
 </head>
 <body>
-    <button id="btn">Click</button>
+    {% csrf_token %}
+    <input type="text" id="text">
+    <button id="d">Click</button>
+    <h1 id="resp"></h1>
 </body>
 </html>

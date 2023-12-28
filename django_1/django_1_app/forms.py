@@ -50,3 +50,8 @@ class TaskForm(forms.ModelForm):
     class Meta():
         model = Task
         fields = ['name', 'status', 'deadline', 'priority']
+        widgets = {'name': forms.TextInput(attrs={'id': 'name'}),
+                   'status': forms.CheckboxInput(attrs={'id': 'status'}),
+                   'deadline': forms.DateInput(attrs={'id': 'deadline'}),
+                   'priority': forms.NumberInput(attrs={'id': 'priority'})
+                   }

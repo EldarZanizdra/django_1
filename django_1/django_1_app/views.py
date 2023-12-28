@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from .models import Project, Task, Users
 from django.urls import reverse_lazy
 from .forms import ProjectForm, TaskForm
@@ -8,7 +9,7 @@ from .forms import RegistrationForm, LoginForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -17,10 +18,12 @@ from django.contrib.auth.models import User
 class TestPage(TemplateView):
     template_name = 'test.html'
 
+    def post(self, request):
+        data = request.POST
+        return JsonResponse({'resp': data['text']})
 
-class ProjectView(CreateView):
-    form_class = TaskForm
-    model = Task
+
+class ProjectView(TemplateView):
     template_name = 'project_page.html'
 
     def get_context_data(self, **kwargs):
@@ -29,10 +32,18 @@ class ProjectView(CreateView):
         tasks = Task.objects.filter(project=project)
         context['project'] = project
         context['tasks'] = tasks
+        context['form'] = TaskForm()
         return context
 
     def get_success_url(self, **kwargs):
         return f"/project_page/{self.kwargs["id"]}"
+
+    def post(self, request, **kwargs):
+        data = request.POST
+        task = Task(name=data['name'], status=True if data['status'] == 'on' else False, deadline=data['deadline'], priority=data['priority'], project=Project.objects.get(id=self.kwargs['id']))
+        task.save()
+        resp = render_to_string('task.html', {'i': task})
+        return JsonResponse(resp, safe=False)
 
 
 # def project(request, **kwargs):
@@ -53,20 +64,6 @@ class ProjectView(CreateView):
 #        return render(request, 'project_page.html', {'project': project, 'tasks': tasks, 'form': form})
 
 
-def project_create(request):
-    if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            project = Project(name=name)
-            project.save()
-            return redirect('/')
-    else:
-        form = ProjectForm()
-        context = {'name': form}
-        return render(request, 'project_create.html', context)
-
-
 def project_edit(request, **kwargs):
     p = Project.objects.get(id=kwargs['id'])
     if request.method == 'POST':
@@ -77,8 +74,8 @@ def project_edit(request, **kwargs):
             p.save()
             return redirect(f'/')
     else:
-        form = ProjectForm(initial={'name' : p.name})
-        context = {'form' : form}
+        form = ProjectForm(initial={'name': p.name})
+        context = {'form': form}
         return render(request, "project_edit.html", context)
 
 
